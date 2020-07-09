@@ -28,7 +28,7 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -50,11 +50,83 @@ const followersArray = [];
     </div>
 */
 
-/*
-  List of LS Instructors Github username's:
-    tetondan
-    dustinmyers
-    justsml
-    luishrd
-    bigknell
-*/
+axios
+  .get(" https://api.github.com/users/masondavis2001")
+  .then(response => {
+    console.log(response);
+    const cards = document.querySelector('.cards');
+    const gitcard = createCard(response.data);
+    cards.appendChild(gitcard);
+  })
+
+  .catch(error => {
+    console.log("The data was not returned", error);
+  });
+
+
+function createCard(item) {
+
+
+  const card = document.createElement('div');
+  const cardImg = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const cardName = document.createElement('h3');
+  const cardUsername = document.createElement('p');
+  const cardLocation = document.createElement('p');
+  const cardProfile = document.createElement('p');
+  const cardLink = document.createElement('a');
+  const cardFollowers = document.createElement('p');
+  const cardFollowing = document.createElement('p');
+  const cardBio = document.createElement('p');
+
+
+  card.appendChild(cardImg);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(cardName);
+  cardInfo.appendChild(cardUsername);
+  cardInfo.appendChild(cardLocation);
+  cardInfo.appendChild(cardProfile);
+  cardInfo.appendChild(cardLink);
+  cardInfo.appendChild(cardFollowers);
+  cardInfo.appendChild(cardFollowing);
+  cardInfo.appendChild(cardBio);
+
+
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  cardName.classList.add('name');
+  cardUsername.classList.add('username');
+
+
+  cardImg.src = item.avatar_url;
+  cardName.textContent = item.name;
+  cardUsername.textContent = item.login;
+  cardLocation.textContent = `Location: ${item.location}`;
+  cardProfile.textContent = 'Profile: ';
+  cardLink.textContent = item.url;
+  cardLink.href = item.url;
+  cardFollowers.textContent = `Followers: ${item.followers}`;
+  cardFollowing.textContent = `Following: ${item.following}`;
+  cardBio.textContent = `Bio: ${item.bio}`;
+
+  return card;
+}
+
+
+
+const followersArray = ['emcleary', 'jonivander', 'sami-alaloosi', 'danieltantonio', 'jaketorrez'];
+
+followersArray.forEach(item => {
+  axios
+    .get(`https://api.github.com/users/${item}`)
+    .then(response => {
+      console.log(response);
+      const cards = document.querySelector('.cards');
+      const gitcard = createCard(response.data);
+      cards.appendChild(gitcard);
+    })
+
+    .catch(error => {
+      console.log("The data was not returned", error);
+    })
+})
